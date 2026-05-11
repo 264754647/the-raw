@@ -22,9 +22,11 @@ function Cart({ token, darkMode }) {
     fetchCart();
   }, []);
 
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
   const fetchCart = async () => {
     try {
-      const res = await axios.get('/api/cart', {
+      const res = await axios.get(`${API_URL}/api/cart`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       // API now returns items array directly
@@ -39,7 +41,7 @@ function Cart({ token, darkMode }) {
 
   const handleRemoveItem = async (productId) => {
     try {
-      await axios.post('/api/cart/remove', { productId }, {
+      await axios.post(`${API_URL}/api/cart/remove`, { productId }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchCart();
@@ -51,7 +53,7 @@ function Cart({ token, darkMode }) {
   const handleUpdateQuantity = async (productId, quantity) => {
     if (quantity < 1) return;
     try {
-      await axios.post('/api/cart/update', { productId, quantity }, {
+      await axios.post(`${API_URL}/api/cart/update`, { productId, quantity }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchCart();

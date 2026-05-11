@@ -41,9 +41,11 @@ function Profile({ token, user, darkMode }) {
     fetchAddresses();
   }, []);
 
-  const fetchProfile = async () => {
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
+const fetchProfile = async () => {
     try {
-      const res = await axios.get('/api/users/profile', {
+      const res = await axios.get(`${API_URL}/api/users/profile`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setProfile(res.data);
@@ -55,9 +57,9 @@ function Profile({ token, user, darkMode }) {
     }
   };
 
-  const fetchAddresses = async () => {
+const fetchAddresses = async () => {
     try {
-      const res = await axios.get('/api/addresses', {
+      const res = await axios.get(`${API_URL}/api/addresses`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setAddresses(res.data);
@@ -66,10 +68,10 @@ function Profile({ token, user, darkMode }) {
     }
   };
 
-  const handleSave = async (e) => {
+const handleSave = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.put('/api/users/profile', formData, {
+      const res = await axios.put(`${API_URL}/api/users/profile`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setProfile(res.data);
@@ -85,29 +87,19 @@ function Profile({ token, user, darkMode }) {
     e.preventDefault();
     try {
       if (editingAddressId) {
-        await axios.put(`/api/addresses/${editingAddressId}`, addressFormData, {
+        await axios.put(`${API_URL}/api/addresses/${editingAddressId}`, addressFormData, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setSuccess('Address updated successfully!');
       } else {
-        await axios.post('/api/addresses', addressFormData, {
+        await axios.post(`${API_URL}/api/addresses`, addressFormData, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setSuccess('Address saved successfully!');
       }
       setShowAddressForm(false);
       setEditingAddressId(null);
-      setAddressFormData({
-        fullName: '',
-        email: '',
-        phone: '',
-        address: '',
-        city: '',
-        province: '',
-        postalCode: '',
-        label: 'other',
-        isDefault: false
-      });
+      setAddressFormData({ fullName: '', email: '', phone: '', address: '', city: '', province: '', postalCode: '', label: 'other', isDefault: false });
       await fetchAddresses();
       setTimeout(() => setSuccess(''), 2000);
     } catch (err) {
@@ -115,10 +107,10 @@ function Profile({ token, user, darkMode }) {
     }
   };
 
-  const handleDeleteAddress = async (id) => {
+const handleDeleteAddress = async (id) => {
     if (window.confirm('Are you sure you want to delete this address?')) {
       try {
-        await axios.delete(`/api/addresses/${id}`, {
+        await axios.delete(`${API_URL}/api/addresses/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setSuccess('Address deleted successfully!');
@@ -130,9 +122,9 @@ function Profile({ token, user, darkMode }) {
     }
   };
 
-  const handleSetDefault = async (id) => {
+const handleSetDefault = async (id) => {
     try {
-      await axios.patch(`/api/addresses/${id}/set-default`, {}, {
+      await axios.patch(`${API_URL}/api/addresses/${id}/set-default`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSuccess('Default address updated!');

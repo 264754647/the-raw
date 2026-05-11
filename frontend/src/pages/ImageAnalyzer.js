@@ -29,7 +29,7 @@ function ImageAnalyzer() {
     }
   };
 
-  const handleAnalyze = async () => {
+const handleAnalyze = async () => {
     if (!selectedImage) {
       setError('Please select an image first');
       return;
@@ -41,12 +41,14 @@ function ImageAnalyzer() {
 
     try {
       compressImage(selectedImage, async (compressedBase64) => {
-        const response = await axios.post('/api/ai/analyze-image', {
+        const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
+        const response = await axios.post(`${API_URL}/api/ai/analyze-image`, {
           image: compressedBase64,
           imageType: 'image/jpeg'
         });
 
-        const productsResponse = await axios.get('/api/products');
+        const productsResponse = await axios.get(`${API_URL}/api/products`);
         const allProducts = productsResponse.data;
 
         const keywords = response.data.keywords || [];

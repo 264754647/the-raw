@@ -22,7 +22,8 @@ function OrderHistory({ token, darkMode }) {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get('/api/orders', {
+      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const res = await axios.get(`${API_URL}/api/orders`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       // Sort orders by date/time (newest first)

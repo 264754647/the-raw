@@ -19,6 +19,8 @@ function ProductDetail({ token, darkMode }) {
   const [userWishlist, setUserWishlist] = useState([]);
   const navigate = useNavigate();
 
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
   const colors = {
     bg: darkMode ? '#0f0f0f' : '#fff',
     text: darkMode ? '#fff' : '#000',
@@ -41,8 +43,7 @@ function ProductDetail({ token, darkMode }) {
   const fetchProduct = async () => {
     try {
       console.log('Fetching product with ID:', id);
-      console.log('Request URL: /api/products/' + id);
-      const res = await axios.get(`/api/products/${id}`);
+      const res = await axios.get(`${API_URL}/api/products/${id}`);
       console.log('Product fetched successfully:', res.data);
       setProduct(res.data);
       setSelectedImage(res.data.media?.featured || `/products/${res.data._id}.jpg`);
@@ -67,7 +68,7 @@ function ProductDetail({ token, darkMode }) {
 
   const fetchUserWishlist = async () => {
     try {
-      const res = await axios.get('/api/wishlist', {
+      const res = await axios.get(`${API_URL}/api/wishlist`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       console.log('User wishlist fetched:', res.data);

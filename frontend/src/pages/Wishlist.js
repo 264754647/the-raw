@@ -26,12 +26,15 @@ function Wishlist({ token, darkMode }) {
     fetchWishlist();
   }, [token, navigate]);
 
-  const fetchWishlist = async () => {
+const fetchWishlist = async () => {
     try {
       console.log('Fetching wishlist');
-      const res = await axios.get('/api/wishlist', {
+      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      
+      const res = await axios.get(`${API_URL}/api/wishlist`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      
       console.log('Wishlist data received:', res.data);
       console.log('First item:', res.data[0]);
       setWishlistItems(res.data);
@@ -42,12 +45,15 @@ function Wishlist({ token, darkMode }) {
       setLoading(false);
     }
   };
-
-  const handleRemoveFromWishlist = async (productId) => {
+  
+const handleRemoveFromWishlist = async (productId) => {
     try {
-      await axios.delete(`/api/wishlist/${productId}`, {
+      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      
+      await axios.delete(`${API_URL}/api/wishlist/${productId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      
       setWishlistItems(wishlistItems.filter(item => item.productId !== productId));
     } catch (err) {
       console.error('Error removing from wishlist:', err);

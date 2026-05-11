@@ -10,9 +10,11 @@ function Products() {
     fetchProducts();
   }, []);
 
-  const fetchProducts = async () => {
+const fetchProducts = async () => {
     try {
-      const res = await axios.get('/api/products');
+      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const res = await axios.get(`${API_URL}/api/products`);
+      
       setProducts(res.data);
     } catch (error) {
       console.error('Error fetching products:', error);

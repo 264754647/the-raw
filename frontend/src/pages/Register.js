@@ -11,16 +11,19 @@ function Register({ onLogin, darkMode }) {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/api/auth/register', {
+      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      
+      const res = await axios.post(`${API_URL}/api/auth/register`, {
         firstName,
         lastName,
         email,
         password,
         phone
       });
+      
       onLogin(res.data.token);
       navigate('/');
     } catch (err) {

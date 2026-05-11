@@ -11,7 +11,9 @@ function Login({ onLogin, darkMode }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/api/auth/login', { email, password });
+      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const res = await axios.post(`${API_URL}/api/auth/login`, { email, password });
+      
       onLogin(res.data.token);
       navigate('/');
     } catch (err) {

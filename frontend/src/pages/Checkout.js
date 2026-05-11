@@ -26,6 +26,8 @@ function Checkout({ token, darkMode }) {
     postalCode: ''
   });
 
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
   const navigate = useNavigate();
 
   const colors = {
@@ -47,7 +49,7 @@ function Checkout({ token, darkMode }) {
 
   const fetchCart = async () => {
     try {
-      const res = await axios.get('/api/cart', {
+    const res = await axios.get(`${API_URL}/api/cart`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCart({ items: res.data });
@@ -60,7 +62,7 @@ function Checkout({ token, darkMode }) {
 
   const fetchSavedAddresses = async () => {
     try {
-      const res = await axios.get('/api/addresses', {
+      const res = await axios.get(`${API_URL}/api/addresses`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSavedAddresses(res.data);
@@ -101,7 +103,7 @@ function Checkout({ token, darkMode }) {
     setPromoLoading(true);
     setError('');
     try {
-      const res = await axios.post('/api/promo/validate', {
+      const res = await axios.post(`${API_URL}/api/promo/validate`, {
         code: promoCode,
         orderTotal: subtotal
       }, {
@@ -144,7 +146,7 @@ function Checkout({ token, darkMode }) {
 
       // Save address if user wants to
       if (saveAddress && !selectedAddressId) {
-        await axios.post('/api/addresses', {
+        await axios.post(`${API_URL}/api/addresses`, {
           ...formData,
           label: addressLabel
         }, {
@@ -174,7 +176,7 @@ function Checkout({ token, darkMode }) {
       console.log('Total field value:', requestPayload.total);
       console.log('Type of total:', typeof requestPayload.total);
 
-      const res = await axios.post('/api/orders/checkout', requestPayload, {
+      const res = await axios.post(`${API_URL}/api/orders/checkout`, requestPayload, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSuccess('Order placed successfully!');
