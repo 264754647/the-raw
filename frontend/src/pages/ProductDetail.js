@@ -98,7 +98,7 @@ function ProductDetail({ token, darkMode }) {
     try {
       if (isInWishlist) {
         // Remove from wishlist
-        await axios.delete(`/api/wishlist/${id}`, {
+        await axios.delete(`${API_URL}/api/wishlist/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         console.log('Item removed from wishlist');
@@ -107,7 +107,7 @@ function ProductDetail({ token, darkMode }) {
         setSuccess('Removed from saved items');
       } else {
         // Add to wishlist
-        await axios.post('/api/wishlist/add',
+        await axios.post(`${API_URL}/api/wishlist/add`,
           { productId: id, productName: product.name, price: product.price },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -126,7 +126,7 @@ function ProductDetail({ token, darkMode }) {
 
   const fetchRelatedProducts = async (gender, category) => {
     try {
-      const res = await axios.get('/api/products');
+      const res = await axios.get(`${API_URL}/api/products`);
       const related = res.data
         .filter(p => p.gender === gender && p.category === category && p._id !== id)
         .slice(0, 4);
@@ -158,7 +158,7 @@ function ProductDetail({ token, darkMode }) {
         color: selectedColor
       });
 
-      const res = await axios.post('/api/cart/add',
+      const res = await axios.post(`${API_URL}/api/cart/add`, // <-- ADDED ${API_URL} HERE
         { productId: id, quantity: parseInt(quantity), size: selectedSize, color: selectedColor },
         { headers: { Authorization: `Bearer ${token}` } }
       );
