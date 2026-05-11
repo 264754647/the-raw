@@ -38,7 +38,6 @@ function GenderCategory({ darkMode }) {
       const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
       
       const res = await axios.get(`${API_URL}/api/products`);
-      console.log("res.data", res.data);
       
       const filtered = res.data.filter(p => p.gender === gender.toUpperCase());
       setProducts(filtered);
