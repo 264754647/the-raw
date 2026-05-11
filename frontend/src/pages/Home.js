@@ -43,7 +43,7 @@ function Home({ showSidebar, setShowSidebar, setSidebarGender, darkMode }) {
             zIndex: 1
           }}
         >
-          <source src="/HomepageVideo.mp4" type="video/mp4" />
+          <source src="/StyleDiscovery.mp4" type="video/mp4" />
         </video>
 
         {/* Dark overlay */}
