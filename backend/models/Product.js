@@ -55,4 +55,4 @@ const productSchema = new mongoose.Schema({
   },
 }, { _id: true });
 
-module.exports = mongoose.model('Product', productSchema);
+module.exports = mongoose.model('products', productSchema, 'clothing-shop');
