@@ -13,7 +13,7 @@ function Checkout({ token, darkMode }) {
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState('');
   const [saveAddress, setSaveAddress] = useState(false);
-  const [addressLabel, setAddressLabel] = useState('other');
+  const [addressLabel, setAddressLabel] = useState('home');
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -137,6 +137,12 @@ function Checkout({ token, darkMode }) {
       console.log('Calculated Total:', calculatedTotal);
       console.log('Promo Discount State:', promoDiscount);
 
+      if (!cart?.items || cart.items.length === 0) {
+        setError('Your cart is empty. Please add items before checking out.');
+        setIsCheckingOut(false);
+        return;
+      }
+
       // Validate total is a valid number (ALLOW 0 if promo code applied)
       if (isNaN(calculatedTotal) || (calculatedTotal === 0 && !promoDiscount)) {
         setError('Invalid cart total. Please check your items.');
@@ -155,7 +161,7 @@ function Checkout({ token, darkMode }) {
       }
 
       // Apply promo discount if applicable
-      const finalTotal = promoDiscount ? calculatedTotal - promoDiscount.discountAmount : calculatedTotal;
+      const finalTotal = Math.max(0, promoDiscount ? calculatedTotal - promoDiscount.discountAmount : calculatedTotal);
 
       console.log('🔍 Checkout Debug:');
       console.log('Calculated Total:', calculatedTotal);
@@ -618,7 +624,7 @@ function Checkout({ token, darkMode }) {
             letterSpacing: '0.5px'
           }}>
             <span>TOTAL</span>
-            <span>${(promoDiscount ? total - promoDiscount.discountAmount : total).toFixed(2)}</span>
+            <span>${Math.max(0, promoDiscount ? total - promoDiscount.discountAmount : total).toFixed(2)}</span>
           </div>
         </div>
       </div>

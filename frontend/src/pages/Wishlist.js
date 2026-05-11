@@ -26,7 +26,7 @@ function Wishlist({ token, darkMode }) {
     fetchWishlist();
   }, [token, navigate]);
 
-const fetchWishlist = async () => {
+  const fetchWishlist = async () => {
     try {
       console.log('Fetching wishlist');
       const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
@@ -46,7 +46,7 @@ const fetchWishlist = async () => {
     }
   };
   
-const handleRemoveFromWishlist = async (productId) => {
+  const handleRemoveFromWishlist = async (productId) => {
     try {
       const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
       
@@ -154,25 +154,22 @@ const handleRemoveFromWishlist = async (productId) => {
               }}
               onClick={() => handleViewProduct(item.productId)}
               >
-                {item.productDetails?.image ? (
-                  <img
-                    src={item.productDetails.image}
-                    alt={item.productName}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover'
-                    }}
-                  />
-                ) : (
-                  <div style={{
-                    fontSize: '12px',
-                    color: colors.textLight,
-                    textAlign: 'center'
-                  }}>
-                    No Image
-                  </div>
-                )}
+                <img
+                  src={`/products/${item.productId}.jpg`}
+                  alt={item.productName}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
+                  }}
+                  onError={(e) => {
+                    // Fallback to capital .JPG if the lowercase .jpg fails
+                    if (!e.target.dataset.triedCaps) {
+                      e.target.dataset.triedCaps = 'true';
+                      e.target.src = `/products/${item.productId}.JPG`;
+                    }
+                  }}
+                />
               </div>
 
               <h3 style={{
