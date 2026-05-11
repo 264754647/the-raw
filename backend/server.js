@@ -26,29 +26,38 @@ app.use((req, res, next) => {
 });
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/clothing-shop', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(async () => {
-  console.log('MongoDB connected');
-
-  // Drop Cart collection to fix schema issues
+const connectDB = async () => {
   try {
-    const db = mongoose.connection.db;
-    const collections = await db.listCollections().toArray();
-    const cartExists = collections.some(c => c.name === 'carts');
+    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/clothing-shop', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
 
-    if (cartExists) {
-      console.log('Dropping old Cart collection for schema migration...');
-      await db.dropCollection('carts');
-      console.log('✓ Cart collection dropped, fresh schema will be created');
+    console.log(`📡 MongoDB Connected: ${conn.connection.host}`);
+    console.log(`📂 Database Name: ${conn.connection.name}`); // THIS will verify the exact DB being accessed
+
+    // Drop Cart collection to fix schema issues
+    try {
+      const db = conn.connection.db;
+      const collections = await db.listCollections().toArray();
+      const cartExists = collections.some(c => c.name === 'carts');
+
+      if (cartExists) {
+        console.log('Dropping old Cart collection for schema migration...');
+        await db.dropCollection('carts');
+        console.log('✓ Cart collection dropped, fresh schema will be created');
+      }
+    } catch (err) {
+      console.log('Cart collection migration info:', err.message);
     }
   } catch (err) {
-    console.log('Cart collection migration info:', err.message);
+    console.error('❌ MongoDB connection error:', err.message);
+    // On Render, if this fails, we want the logs to show exactly why
+    process.exit(1); 
   }
-})
-.catch(err => console.log('MongoDB connection error:', err));
+};
+
+connectDB();
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
