@@ -222,12 +222,23 @@ function ProductDetail({ token, darkMode }) {
             justifyContent: 'center'
           }}>
             <img
-              src={selectedImage}
+              // Force the working path we discovered earlier
+              src={`/products/${product._id}.jpg`}
               alt={product.name}
               style={{
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover'
+              }}
+              onError={(e) => {
+                // Fallbacks just in case (for perfumes or ALL CAPS extensions)
+                if (!e.target.dataset.triedFeatured) {
+                  e.target.dataset.triedFeatured = 'true';
+                  e.target.src = product.media?.featured;
+                } else if (!e.target.dataset.triedCaps) {
+                  e.target.dataset.triedCaps = 'true';
+                  e.target.src = `/products/${product._id}.JPG`;
+                }
               }}
             />
           </div>
@@ -405,12 +416,23 @@ function ProductDetail({ token, darkMode }) {
                       overflow: 'hidden'
                     }}>
                       <img
-                        src={prod.media?.featured || `/products/${prod._id}.jpg`}
-                        alt={prod.name}
+                        // Force the working path we discovered earlier
+                        src={`/products/${product._id}.jpg`}
+                        alt={product.name}
                         style={{
                           width: '100%',
                           height: '100%',
                           objectFit: 'cover'
+                        }}
+                        onError={(e) => {
+                          // Fallbacks just in case (for perfumes or ALL CAPS extensions)
+                          if (!e.target.dataset.triedFeatured) {
+                            e.target.dataset.triedFeatured = 'true';
+                            e.target.src = product.media?.featured;
+                          } else if (!e.target.dataset.triedCaps) {
+                            e.target.dataset.triedCaps = 'true';
+                            e.target.src = `/products/${product._id}.JPG`;
+                          }
                         }}
                       />
                     </div>
