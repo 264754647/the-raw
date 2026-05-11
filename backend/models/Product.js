@@ -1,27 +1,15 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
-  _id: {
-    type: String,
-    required: true,
-  },
+  _id: { type: String, required: true },
   sku: String,
-  name: {
-    type: String,
-    required: true,
-  },
+  name: { type: String, required: true },
   slug: String,
-  price: {
-    type: Number,
-    required: true,
-  },
-  currency: {
-    type: String,
-    default: 'USD',
-  },
+  price: { type: Number, required: true },
+  currency: { type: String, default: 'USD' },
   gender: String,
   category: String,
-  collection: String,
+  collectionName: { type: String }, // Renamed from 'collection' to avoid Mongoose conflict
 
   details: {
     description: String,
@@ -45,16 +33,10 @@ const productSchema = new mongoose.Schema({
   }],
 
   metadata: {
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
+    createdAt: { type: Date, default: Date.now },
   },
-}, { _id: true });
+}, { _id: false }); // Set to false if you are providing your own String _id
 
 const Product = mongoose.model('Product', productSchema, 'products'); 
-console.log("DEBUG: Model Initialized. Target Collection:", Product.collection.name);
-module.exports = Product;
 
-console.log("DEBUG: Database Name:", mongoose.connection.name);
-console.log("DEBUG: Collection Name:", Product.collection.name);
+module.exports = Product;
