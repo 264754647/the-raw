@@ -1,8 +1,5 @@
 const mongoose = require('mongoose');
 
-console.log("DEBUG: Database Name:", mongoose.connection.name);
-console.log("DEBUG: Collection Name:", Product.collection.name);
-
 const productSchema = new mongoose.Schema({
   _id: {
     type: String,
@@ -58,3 +55,6 @@ const productSchema = new mongoose.Schema({
 const Product = mongoose.model('Product', productSchema, 'products'); 
 console.log("DEBUG: Model Initialized. Target Collection:", Product.collection.name);
 module.exports = Product;
+
+console.log("DEBUG: Database Name:", mongoose.connection.name);
+console.log("DEBUG: Collection Name:", Product.collection.name);
