@@ -250,7 +250,11 @@ function GenderCategory({ darkMode }) {
                 transition: 'background-color 0.3s ease'
               }}>
                 <img
-                  src={product.media?.featured ? product.media.featured.toUpperCase() : ''}
+                  src={
+                      product.media?.featured 
+                        ? product.media.featured.toUpperCase() // Forces /products/m-top-01.jpg to /PRODUCTS/M-TOP-01.JPG
+                        : `/products/${product._id}.JPG`       // Fallback using the ID in caps
+                    }
                   alt={product.name}
                   style={{
                     width: '100%',
@@ -258,11 +262,10 @@ function GenderCategory({ darkMode }) {
                     objectFit: 'cover'
                   }}
                   onError={(e) => {
-                    // Fallback just in case some are lowercase
-                    const currentSrc = e.target.src;
-                    if (currentSrc !== currentSrc.toLowerCase()) {
-                      e.target.src = currentSrc.toLowerCase();
-                    }
+                  if (!e.target.dataset.triedLowercase) {
+                        e.target.dataset.triedLowercase = 'true';
+                        e.target.src = product.media?.featured || `/products/${product._id}.jpg`;
+                      }
                   }}
                 />
               </div>
