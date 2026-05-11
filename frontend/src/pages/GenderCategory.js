@@ -250,12 +250,19 @@ function GenderCategory({ darkMode }) {
                 transition: 'background-color 0.3s ease'
               }}>
                 <img
-                  src={product.media?.featured || `/products/${product._id}.jpg`}
+                  src={product.media?.featured ? product.media.featured.toUpperCase() : ''}
                   alt={product.name}
                   style={{
                     width: '100%',
                     height: '100%',
                     objectFit: 'cover'
+                  }}
+                  onError={(e) => {
+                    // Fallback just in case some are lowercase
+                    const currentSrc = e.target.src;
+                    if (currentSrc !== currentSrc.toLowerCase()) {
+                      e.target.src = currentSrc.toLowerCase();
+                    }
                   }}
                 />
               </div>
