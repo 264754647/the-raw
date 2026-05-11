@@ -55,4 +55,6 @@ const productSchema = new mongoose.Schema({
   },
 }, { _id: true });
 
-module.exports = mongoose.model('products', productSchema, 'clothing-shop');
+const Product = mongoose.model('Product', productSchema, 'products'); 
+console.log("DEBUG: Model Initialized. Target Collection:", Product.collection.name);
+module.exports = Product;
