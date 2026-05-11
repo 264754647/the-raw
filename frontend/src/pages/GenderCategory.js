@@ -249,25 +249,20 @@ function GenderCategory({ darkMode }) {
                 overflow: 'hidden',
                 transition: 'background-color 0.3s ease'
               }}>
-                <img
-                  src={
-                      product.media?.featured 
-                        ? product.media.featured.toUpperCase() // Forces /products/m-top-01.jpg to /PRODUCTS/M-TOP-01.JPG
-                        : `/products/${product._id}.JPG`       // Fallback using the ID in caps
-                    }
-                  alt={product.name}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover'
-                  }}
-                  onError={(e) => {
-                  if (!e.target.dataset.triedLowercase) {
-                        e.target.dataset.triedLowercase = 'true';
-                        e.target.src = product.media?.featured || `/products/${product._id}.jpg`;
-                      }
-                  }}
-                />
+              <img
+                // Force use of ID + lowercase extension
+                src={`/products/${product._id}.jpg`} 
+                alt={product.name}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover'
+                }}
+                onError={(e) => {
+                  // If that fails, try the database featured path as a fallback
+                  e.target.src = product.media?.featured;
+                }}
+              />
               </div>
 
               {/* Product Info */}
