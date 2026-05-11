@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+console.log("DEBUG: Database Name:", mongoose.connection.name);
+console.log("DEBUG: Collection Name:", Product.collection.name);
+
 const productSchema = new mongoose.Schema({
   _id: {
     type: String,
