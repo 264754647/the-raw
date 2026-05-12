@@ -16,7 +16,8 @@ function Navbar({ user, onLogout, onGenderClick, token, darkMode, setDarkMode })
 
 const fetchCartCount = async () => {
     try {
-      const res = await axios.get('/api/cart', {
+      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const res = await axios.get(`${API_URL}/api/cart`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
