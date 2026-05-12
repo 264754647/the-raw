@@ -18,7 +18,7 @@ function Story({ darkMode }) {
     {
       name: 'LENG',
       role: 'id:6831346221',
-      image: '/Leng.png',
+      image: '/Leng_baw.jpg',
       bio: 'Visionary behind RAW\'s aesthetic direction'
     },
     {
