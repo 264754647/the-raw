@@ -10,17 +10,27 @@ function Navbar({ user, onLogout, onGenderClick, token, darkMode, setDarkMode })
     if (token) {
       fetchCartCount();
     } else {
-      // Reset cart count when user logs out
       setCartCount(0);
     }
   }, [token]);
 
-  const fetchCartCount = async () => {
+const fetchCartCount = async () => {
     try {
       const res = await axios.get('/api/cart', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setCartCount(res.data.length || 0);
+
+      if (res.data && Array.isArray(res.data.items)) {
+        const totalItems = res.data.items.reduce((total, item) => total + (Number(item.quantity) || 1), 0);
+        setCartCount(totalItems);
+      } 
+      else if (Array.isArray(res.data)) {
+        const totalItems = res.data.reduce((total, item) => total + (Number(item.quantity) || 1), 0);
+        setCartCount(totalItems);
+      } 
+      else {
+        setCartCount(0);
+      }
     } catch (err) {
       console.error('Error fetching cart count:', err);
       setCartCount(0);

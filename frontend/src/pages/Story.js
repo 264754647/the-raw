@@ -17,7 +17,7 @@ function Story({ darkMode }) {
   const teamMembers = [
     {
       name: 'LENG',
-      role: 'Creative Director',
+      role: 'id:6831346221',
       image: '/HomePagePics1.png',
       bio: 'Visionary behind RAW\'s aesthetic direction'
     },
