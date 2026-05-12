@@ -1,37 +1,7 @@
-const nodemailer = require('nodemailer');
-const dns = require('node:dns');
+const { Resend } = require('resend');
 
-// Force IPv4 globally to stop the ENETUNREACH IPv6 errors
-if (dns.setDefaultResultOrder) {
-  dns.setDefaultResultOrder('ipv4first');
-}
-
-// Create transporter
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false, // Must be false for port 587
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
-  },
-  tls: {
-    // This helps bypass issues with institutional/Workspace certificates
-    rejectUnauthorized: false,
-    minVersion: 'TLSv1.2'
-  },
-  family: 4 // Forces IPv4
-});
-
-// Verify connection immediately
-transporter.verify((error, success) => {
-  if (error) {
-    console.log('⚠️ Email service failed to connect.');
-    console.error('Reason:', error.message);
-  } else {
-    console.log('✓ Email service (Chula Workspace) is ready');
-  }
-});
+// Initialize Resend with your API Key from Render Environment Variables
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const generateReceiptHTML = (order, user) => {
   const itemsHTML = order.items
@@ -144,8 +114,9 @@ const generateReceiptHTML = (order, user) => {
 
 const sendReceiptEmail = async (order, userDetails) => {
   try {
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-      console.log('⚠️ Email service not configured. Receipt email skipped.');
+    // Check for Resend API Key
+    if (!process.env.RESEND_API_KEY) {
+      console.log('⚠️ Resend API Key not configured. Receipt email skipped.');
       return false;
     }
 
@@ -157,15 +128,19 @@ const sendReceiptEmail = async (order, userDetails) => {
 
     const htmlContent = generateReceiptHTML(orderWithSubtotal, userDetails);
 
-    const mailOptions = {
-      from: `"Clothing Shop" <${process.env.EMAIL_USER}>`,
+    const { data, error } = await resend.emails.send({
+      from: 'Clothing Shop <onboarding@resend.dev>', // You can change this once you verify a domain
       to: userDetails.email,
       subject: `Order Confirmation - Order #${order._id}`,
       html: htmlContent
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
-    console.log(`✓ Receipt email sent to ${userDetails.email}`);
+    if (error) {
+      console.error('Resend Error:', error);
+      return false;
+    }
+
+    console.log(`✓ Receipt email sent via Resend to ${userDetails.email}`);
     return true;
   } catch (error) {
     console.error('Error sending receipt email:', error);

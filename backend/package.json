@@ -16,7 +16,8 @@
     "jimp": "^1.6.1",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.0",
-    "nodemailer": "^8.0.7"
+    "nodemailer": "^8.0.7",
+    "resend": "^6.12.3"
   },
   "devDependencies": {
     "axios": "^1.16.0",
