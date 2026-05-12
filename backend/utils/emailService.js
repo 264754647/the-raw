@@ -1,29 +1,35 @@
 const nodemailer = require('nodemailer');
 const dns = require('node:dns');
 
+// Force IPv4 globally to stop the ENETUNREACH IPv6 errors
 if (dns.setDefaultResultOrder) {
   dns.setDefaultResultOrder('ipv4first');
 }
 
+// Create transporter
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
+  port: 587,
+  secure: false, // Must be false for port 587
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD
   },
-  family: 4,
-  connectionTimeout: 10000,
+  tls: {
+    // This helps bypass issues with institutional/Workspace certificates
+    rejectUnauthorized: false,
+    minVersion: 'TLSv1.2'
+  },
+  family: 4 // Forces IPv4
 });
 
-// Verify connection
+// Verify connection immediately
 transporter.verify((error, success) => {
   if (error) {
-    console.log('⚠️  Email service not configured or connection timed out.');
-    console.error('Technical Error:', error.message);
+    console.log('⚠️ Email service failed to connect.');
+    console.error('Reason:', error.message);
   } else {
-    console.log('✓ Email service configured and ready');
+    console.log('✓ Email service (Chula Workspace) is ready');
   }
 });
 
@@ -139,7 +145,7 @@ const generateReceiptHTML = (order, user) => {
 const sendReceiptEmail = async (order, userDetails) => {
   try {
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-      console.log('⚠️  Email service not configured. Receipt email skipped.');
+      console.log('⚠️ Email service not configured. Receipt email skipped.');
       return false;
     }
 
