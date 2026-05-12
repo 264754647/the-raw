@@ -18,13 +18,13 @@ function Story({ darkMode }) {
     {
       name: 'LENG',
       role: 'id:6831346221',
-      image: '/HomePagePics1.png',
+      image: '/Leng.png',
       bio: 'Visionary behind RAW\'s aesthetic direction'
     },
     {
       name: 'WIN',
-      role: 'Brand Strategist',
-      image: '/HomePagePics2.png',
+      role: 'id:6831364521',
+      image: '/Win.jpg',
       bio: 'Architect of RAW\'s innovative vision'
     },
     {
