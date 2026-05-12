@@ -24,7 +24,7 @@ function Story({ darkMode }) {
     {
       name: 'WIN',
       role: 'id:6831364521',
-      image: '/Win.jpg',
+      image: '/Win_baw.jpg',
       bio: 'Architect of RAW\'s innovative vision'
     },
     {
